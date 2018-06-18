@@ -8,7 +8,7 @@ namespace Ise\Application\Cache;
 
 use Zend\Cache\Storage\StorageInterface;
 
-abstract class AbstractCache
+abstract class AbstractCache implements CacheInterface
 {
 
     /**

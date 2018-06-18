@@ -4,6 +4,8 @@
  */
 declare(strict_types=1);
 
+namespace Ise\Application;
+
 return [
     'display_not_found_reason' => false,
     'display_exceptions'       => false,

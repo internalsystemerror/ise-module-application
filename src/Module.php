@@ -9,6 +9,7 @@ namespace Ise\Application;
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Zend\Mvc\Application;
 
 class Module implements BootstrapListenerInterface, ConfigProviderInterface
 {
@@ -19,13 +20,14 @@ class Module implements BootstrapListenerInterface, ConfigProviderInterface
     public function onBootstrap(EventInterface $event)
     {
         // Get event manager
-        $target         = $event->getTarget();
-        $eventManager   = $target->getEventManager();
-        $serviceManager = $target->getServiceManager();
+        $application = $event->getTarget();
+        if (!$application instanceof Application) {
+            return;
+        }
 
         // Attach route cache listener
-        $routeCacheListener = $serviceManager->get(Listener\RouteCacheListener::class);
-        $routeCacheListener->attach($eventManager);
+        $routeCacheListener = $application->getServiceManager()->get(Listener\RouteCacheListener::class);
+        $routeCacheListener->attach($application->getEventManager());
     }
 
     /**

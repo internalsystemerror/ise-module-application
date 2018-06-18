@@ -6,15 +6,17 @@ declare(strict_types=1);
 
 namespace Ise\Application\Cache\Result;
 
+use Doctrine\Common\Persistence\ObjectManager;
+
 class FormCacheResult extends AbstractCacheResult
 {
 
     /**
-     * Get route name
+     * Is the object manager required
      *
-     * @return string
+     * @return bool
      */
-    public function requiresObjectManager()
+    public function requiresObjectManager(): bool
     {
         return $this->data['requires-object-manager'];
     }
@@ -24,20 +26,27 @@ class FormCacheResult extends AbstractCacheResult
      *
      * @return array
      */
-    public function getSpecification()
+    public function getSpecification(): array
     {
         return $this->data['form-specification'];
     }
 
-    public function injectObjectManager($objectManager)
+    /**
+     * Inject object manager
+     *
+     * @param ObjectManager $objectManager
+     *
+     * @return void
+     */
+    public function injectObjectManager(ObjectManager $objectManager): void
     {
-        if (!isset($this->data['form-specification']['elements'])) {
+        if (!$this->data['form-specification']['elements']) {
             return;
         }
 
         foreach ($this->data['form-specification']['elements'] as $key => $element) {
             // Cast element to array
-            if (!isset($element['spec']['options']['object_manager'])) {
+            if (!$element['spec']['options']['object_manager']) {
                 continue;
             }
 

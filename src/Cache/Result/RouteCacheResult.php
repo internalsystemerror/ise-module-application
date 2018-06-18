@@ -14,7 +14,7 @@ class RouteCacheResult extends AbstractCacheResult
      *
      * @return string
      */
-    public function getRouteName()
+    public function getRouteName(): string
     {
         return $this->data['route-name'];
     }
@@ -24,7 +24,7 @@ class RouteCacheResult extends AbstractCacheResult
      *
      * @return array
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         return [
             'route'    => $this->data['uri'],

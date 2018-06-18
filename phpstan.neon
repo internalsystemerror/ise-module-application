@@ -2,6 +2,8 @@ parameters:
     fileExtensions:
         - php
         - php.dist
+    ignoreErrors:
+        - '#.*Redis::.*#'
     includes:
         - vendor/phpstan/phpstan-phpunit/extension.neon
         - vendor/phpstan/phpstan-phpunit/rules.neon

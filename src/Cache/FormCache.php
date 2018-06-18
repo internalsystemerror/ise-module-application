@@ -6,15 +6,13 @@ declare(strict_types=1);
 
 namespace Ise\Application\Cache;
 
-use ArrayObject;
-
 class FormCache extends AbstractCache
 {
 
     /**
      * @inheritDoc
      */
-    public function getCache($class)
+    public function getCache(string $class): ?Result\AbstractCacheResult
     {
         $data = $this->storage->getItem($this->getCacheKey($class));
         if ($data === null) {
@@ -27,27 +25,22 @@ class FormCache extends AbstractCache
     /**
      * @inheritDoc
      */
-    public function setCache($class, $formSpecification)
+    public function setCache(string $class, $formSpecification): void
     {
-        if (!$formSpecification instanceof ArrayObject) {
+        if (!is_iterable($formSpecification)) {
             return;
         }
 
-        $specificationArray    = (array)$formSpecification;
-        $objectManagerDetected = $this->checkForObjectManager($specificationArray);
-
-        $data = [
-            'requires-object-manager' => $objectManagerDetected,
-            'form-specification'      => $specificationArray,
-        ];
-
-        $this->storage->setItem($this->getCacheKey($class), $data);
+        $this->storage->setItem($this->getCacheKey($class), [
+            'requires-object-manager' => $this->checkForObjectManager($formSpecification),
+            'form-specification'      => $formSpecification,
+        ]);
     }
 
     /**
      * @inheritDoc
      */
-    public function getCacheKey($class)
+    public function getCacheKey(string $class): string
     {
         return 'form-' . md5($class);
     }
@@ -55,21 +48,20 @@ class FormCache extends AbstractCache
     /**
      * Checks for object manager
      *
-     * @param array $specificationArray
+     * @param iterable $specificationArray
      *
-     * @return boolean
+     * @return bool
      */
-    protected function checkForObjectManager(array &$specificationArray)
+    protected function checkForObjectManager(iterable &$specificationArray): bool
     {
-        if (!isset($specificationArray['elements'])) {
+        if (!$specificationArray['elements']) {
             return false;
         }
 
         $objectManagerDetected = false;
-        foreach ($specificationArray['elements'] as $key => $element) {
+        foreach ($specificationArray['elements'] as $key => &$element) {
             // Cast element to array
-            $elementSpecification = (array)$element;
-            if (!isset($elementSpecification['spec']['options']['object_manager'])) {
+            if (!$element['spec']['options']['object_manager']) {
                 continue;
             }
 
@@ -77,10 +69,7 @@ class FormCache extends AbstractCache
             $objectManagerDetected = true;
 
             // Remove object manager in specification
-            $elementSpecification['spec']['options']['object_manager'] = true;
-
-            // Override element specification
-            $specificationArray['elements'][$key] = $elementSpecification;
+            $element['spec']['options']['object_manager'] = true;
         }
 
         return $objectManagerDetected;

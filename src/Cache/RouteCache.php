@@ -17,7 +17,7 @@ class RouteCache extends AbstractCache
     /**
      * @inheritDoc
      */
-    public function getCache($uri)
+    public function getCache(string $uri): ?Result\AbstractCacheResult
     {
         $data = $this->storage->getItem($this->getCacheKey($uri));
         if ($data === null) {
@@ -30,7 +30,7 @@ class RouteCache extends AbstractCache
     /**
      * @inheritDoc
      */
-    public function setCache($uri, $routeMatch)
+    public function setCache(string $uri, $routeMatch): void
     {
         if (!$routeMatch instanceof RouteMatch) {
             return;
@@ -47,7 +47,7 @@ class RouteCache extends AbstractCache
     /**
      * @inheritDoc
      */
-    public function getCacheKey($string)
+    public function getCacheKey(string $string): string
     {
         return 'route-' . md5($string);
     }
