@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
+
 return [
     'display_not_found_reason' => false,
     'display_exceptions'       => false,

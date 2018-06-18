@@ -1,17 +1,21 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Application\Listener;
 
+use Ise\Application\Cache\Result\RouteCacheResult;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\Http\Literal;
-use Ise\Application\Cache\Result\RouteCacheResult;
+use Zend\Router\Http\Literal;
 
 class RouteCacheListener extends AbstractCacheListener
 {
-    
+
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function attach(EventManagerInterface $events)
     {
@@ -36,17 +40,19 @@ class RouteCacheListener extends AbstractCacheListener
     {
         // Get uri path
         $request = $event->getApplication()->getRequest();
-        if (!$request instanceof Request || $request->getMethod() !== Request::METHOD_GET || $request->getQuery()->count() > 0) {
+        if (!$request instanceof Request || $request->getMethod() !== Request::METHOD_GET
+            || $request->getQuery()->count() > 0
+        ) {
             return;
         }
         $event->setParam(self::ROUTE_CACHEABLE, true);
-        
+
         // Get result cache via Adapter factory
         $uriPath     = $request->getUri()->getPath();
         $resultCache = $this->cacheService->getCache($uriPath);
         if ($resultCache instanceof RouteCacheResult) {
             $event->setParam(self::ROUTE_CACHED, true);
-            
+
             // Add new router to Tree router ZF2
             $this->addNewRouter($event, $resultCache);
         }
@@ -78,18 +84,18 @@ class RouteCacheListener extends AbstractCacheListener
      * Add new router to Tree Router ZF2 with high priority
      * Base on result cache to create route literal
      *
-     * @param MvcEvent $event
+     * @param MvcEvent         $event
      * @param RouteCacheResult $resultCache
      */
     protected function addNewRouter(MvcEvent &$event, RouteCacheResult $resultCache)
     {
         // Create route literal
         $route = Literal::factory($resultCache->getOptions());
-        
+
         // Add router
         $router = $event->getRouter();
         $router->addRoute($resultCache->getRouteName(), $route, 1000000);
-        
+
         // Set router to event object
         $event->setRouter($router);
     }

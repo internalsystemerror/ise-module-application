@@ -1,8 +1,12 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Application\Cache;
 
-use Zend\Mvc\Router\Http\RouteMatch;
+use Zend\Router\Http\RouteMatch;
 
 class RouteCache extends AbstractCache
 {
@@ -11,7 +15,7 @@ class RouteCache extends AbstractCache
     const ROUTE_CACHED    = 'route-cached';
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function getCache($uri)
     {
@@ -24,7 +28,7 @@ class RouteCache extends AbstractCache
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function setCache($uri, $routeMatch)
     {
@@ -41,7 +45,7 @@ class RouteCache extends AbstractCache
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function getCacheKey($string)
     {

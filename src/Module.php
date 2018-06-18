@@ -1,4 +1,8 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Application;
 
@@ -10,7 +14,7 @@ class Module implements BootstrapListenerInterface, ConfigProviderInterface
 {
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function onBootstrap(EventInterface $event)
     {
@@ -18,14 +22,14 @@ class Module implements BootstrapListenerInterface, ConfigProviderInterface
         $target         = $event->getTarget();
         $eventManager   = $target->getEventManager();
         $serviceManager = $target->getServiceManager();
-        
+
         // Attach route cache listener
         $routeCacheListener = $serviceManager->get(Listener\RouteCacheListener::class);
         $routeCacheListener->attach($eventManager);
     }
-    
+
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function getConfig()
     {

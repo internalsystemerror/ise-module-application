@@ -1,10 +1,14 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Application\Cache\Result;
 
 class RouteCacheResult extends AbstractCacheResult
 {
-    
+
     /**
      * Get route name
      *
@@ -14,7 +18,7 @@ class RouteCacheResult extends AbstractCacheResult
     {
         return $this->data['route-name'];
     }
-    
+
     /**
      * Get options
      *
